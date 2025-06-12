@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Joel González | Desarrollador Full Stack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --color-acento: #00eaff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 10px;
+      animation: slideIn 2s ease forwards;
+      z-index: 2;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      color: #ccc;
+      animation: fadeIn 3s ease-in-out;
+      z-index: 2;
+    }
+
+    .music-icon {
+      font-size: 2rem;
+      color: var(--color-acento);
+      margin-top: 20px;
+      animation: pulse 2s infinite;
+      z-index: 2;
+    }
+
+    .contact-icons {
+      margin-top: 40px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      animation: fadeInUp 2.5s ease-in-out;
+      z-index: 2;
+    }
+
+    .contact-icons a {
+      color: white;
+      font-size: 1.8rem;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .contact-icons a:hover {
+      transform: scale(1.2);
+      color: var(--color-acento);
+    }
+
+    .note {
+      position: absolute;
+      font-size: 1.5rem;
+      color: var(--color-acento);
+      animation: floatUp 2.5s forwards ease-out;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: translateY(-150px) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes slideIn {
+      0% {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+        color: #80ffff;
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .blog-section {
+      background: #111;
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .blog-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+    .blog-post {
+      background: #1c1c1c;
+      color: #ccc;
+      max-width: 700px;
+      margin: 10px 0;
+      padding: 20px;
+      border-left: 5px solid var(--color-acento);
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .blog-post:hover {
+      transform: translateX(10px);
+      background: #2b2b2b;
+    }
+
+    /* 🎸 Estilo para la cuerda */
+    #stringCanvas {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 3rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <h1>Joel González</h1>
+    <p>Desarrollador Full Stack apasionado por el código y la música 🎧</p>
+    <div class="music-icon">
+      <i class="fas fa-music"></i>
+    </div>
+    <div class="contact-icons">
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+      <a href="mailto:joel@example.com"><i class="fas fa-envelope"></i></a>
+      <a href="https://www.youtube.com/@JOELIOUS"><i class="fab fa-youtube"></i></a>
+
+    </div>
+  </section>
+
+  <section class="blog-section" id="blog">
+    <h2>Blog</h2>
+    <div class="blog-post">proyecto: Adjustable tuner</div>
+    <div class="blog-post">proyecto: chillchords.com</div>
+  </section>
+
+  <!-- 🎸 Cuerda visual -->
+  <canvas id="stringCanvas"></canvas>
+
+  <script>
+    // 🎶 Array con la melodía simplificada de Green Greens (notas en Hz)
+    const melody = [
+      392.00, 440.00, 523.25, 440.00,
+      392.00, 440.00, 523.25, 440.00,
+      392.00, 440.00, 523.25, 587.33,
+      523.25, 440.00, 392.00
+    ];
+    let currentNoteIndex = 0;
+
+    // 🔊 Función que genera y reproduce una nota dada una frecuencia
+    function playNote(frequency) {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator(); // Generador de ondas
+      const gainNode = audioCtx.createGain(); // Control de volumen
+
+      oscillator.type = 'triangle'; // Tipo de onda: más suave que la 'square'
+      oscillator.frequency.value = frequency; // Frecuencia de la nota
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination); // Salida hacia los parlantes
+
+      gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); // Volumen moderado
+      oscillator.start(); // Comienza a sonar
+      oscillator.stop(audioCtx.currentTime + 0.3); // Suena durante 0.3 segundos
+    }
+
+    // 🎸 Cuerda animada en el canvas
+    const canvas = document.getElementById('stringCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = canvas.clientHeight;
+    let wave = 0;
+    let amplitude = 0;
+
+    // ⚙️ Función que dibuja la cuerda vibrando usando senos
+    function drawString() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.beginPath();
+      ctx.moveTo(0, height / 2);
+      for (let x = 0; x < width; x++) {
+        const y = height / 2 + Math.sin(x * 0.02 + wave) * amplitude; // Efecto de onda
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = '#00eaff'; // Color celeste
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      wave += 0.1;       // Desfase para animar la onda
+      amplitude *= 0.98; // Efecto de amortiguación (la cuerda se va calmando)
+      requestAnimationFrame(drawString); // Llamada recursiva para animación continua
+    }
+
+    // 🔁 Redimensiona el canvas si cambia el tamaño de la ventana
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = canvas.clientHeight;
+    });
+
+    drawString(); // Inicia la animación de la cuerda
+
+    // 🎼 Reacciona a clics en pantalla: nota + efecto visual + vibración
+    document.addEventListener('click', (e) => {
+      // 🎵 Muestra un símbolo musical animado flotando donde se hizo clic
+      const note = document.createElement('div');
+      note.classList.add('note');
+      const symbols = ['♪', '♩', '♫', '♬', '🎶', '🎵'];
+      note.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      note.style.left = `${e.clientX}px`;
+      note.style.top = `${e.clientY}px`;
+      note.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+      note.style.transform = `rotate(${Math.random() * 360}deg)`;
+      document.body.appendChild(note);
+      setTimeout(() => note.remove(), 2500); // Desaparece luego de 2.5 seg
+
+      // 🔊 Reproduce la siguiente nota de la melodía
+      playNote(melody[currentNoteIndex]);
+      currentNoteIndex = (currentNoteIndex + 1) % melody.length;
+
+      // 💥 Hace vibrar la cuerda animada
+      amplitude = 20;
+    });
+  </script>
+
+</body>
+
+</html>
